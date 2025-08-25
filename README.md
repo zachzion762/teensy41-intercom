@@ -83,9 +83,9 @@ Entities appear automatically under **MQTT → Binary Sensors** (discovery).
 2. **Library Manager**: install  
    - **QNEthernet** (Shawn Silverman)  
    - **PubSubClient** (Nick O’Leary)  
-3. Copy \irmware/TeensyIntercom/secrets_example.h\ → \secrets.h\ and edit with your broker details.  
+3. Copy \firmware/TeensyIntercom/secrets_example.h\ → \secrets.h\ and edit with your broker details.  
    (\secrets.h\ is ignored by Git — safe to commit the project without it.)  
-4. Open \irmware/TeensyIntercom/TeensyIntercom.ino\  
+4. Open \firmware/TeensyIntercom/TeensyIntercom.ino\  
 5. **Verify** → **Upload**
 
 After upload, check MQTT:
