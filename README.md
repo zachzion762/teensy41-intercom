@@ -41,7 +41,7 @@ All pins use \INPUT_PULLUP\, so pressing pulls the pin LOW.
 
 | Printing Brackets | Empty Enclosure | Wiring | Final Mount |
 |-------------------|-----------------|--------|-------------|
-| ![Brackets](hardware/photos/3d_print_brackets1.jpg) | ![Empty1](hardware/photos/empty1.jpg) | ![Wiring1](hardware/photos/wiring1.jpg) | ![WoodBlock](hardware/photos/wood_block_mount.jpg) |
+| ![Brackets](hardware/photos/3d_print_brackets1.jpg) | ![Empty1](hardware/photos/empty1.jpg) | ![Wiring1](hardware/photos/wiring1.jpg) | ![WoodBlock](hardware/photos/3d_print_brackets5.jpg) |
 
 > More photos in [hardware/photos](hardware/photos).  
 > If your exact filenames differ, update the links above (they were sanitized to remove spaces/parentheses).
