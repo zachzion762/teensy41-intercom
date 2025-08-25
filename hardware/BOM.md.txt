@@ -1,0 +1,13 @@
+# Bill of Materials (BOM)
+
+Exact parts I used to build the Teensy 4.1 Intercom panel.
+
+| Item | Qty | Link | Notes |
+|------|-----|------|-------|
+| Teensy 4.1 + Ethernet Kit | 1 | [Amazon link](https://www.amazon.com/dp/B09NXYWYK7?ref=ppx_yo2ov_dt_b_fed_asin_title) | Main MCU with native Ethernet |
+| RJ45 PoE Splitter (12V out) | 1 | [Amazon link](https://www.amazon.com/dp/B07W6KM59K?ref=ppx_yo2ov_dt_b_fed_asin_title) | For powering Teensy over Ethernet |
+| Screw Terminal Breakout (Teensy 4.1) | 1 | [Amazon link](https://www.amazon.com/dp/B08RSCFBNF?ref=ppx_yo2ov_dt_b_fed_asin_title) | Easier wiring for buttons |
+| Momentary Pushbuttons | 12 | Local / Amazon | Any SPST NO pushbutton |
+| Misc wiring | – | Local | 22–24 AWG stranded, Dupont jumpers, ferrules |
+| 3D printed bracket | 1 | [`Teensy_4.1_Ethernet_Mount.stl`](Teensy_4.1_Ethernet_Mount.stl) | Mount for Teensy + Ethernet kit |
+| Wood block / panel | 1 | – | Mounting base (see photos) |

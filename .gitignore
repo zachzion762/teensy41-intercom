@@ -1,0 +1,38 @@
+
+# Local secrets
+firmware/TeensyIntercom/secrets.h
+
+# Scratch
+project-structure.txt
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts
+*.bin
+*.elf
+*.hex
+*.map
+*.dSYM/
+
+# Local secrets
+firmware/TeensyIntercom/secrets.h
+
+# Scratch
+project-structure.txt
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts
+*.bin
+*.elf
+*.hex
+*.map
+*.dSYM/
