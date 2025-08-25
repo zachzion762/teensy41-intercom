@@ -1,5 +1,9 @@
 ﻿# Teensy 4.1 Intercom – MQTT Button Panel
 
+## Demo Video
+[![Watch the demo](https://img.youtube.com/vi/SxNvHAskOwU/0.jpg)](https://www.youtube.com/watch?v=SxNvHAskOwU)
+
+
 Turns a Teensy 4.1 + Ethernet kit into a **12-button MQTT panel** with Home Assistant discovery.  
 Each button is exposed as a binary sensor in Home Assistant, with \ON\/\OFF\ state, plus an availability topic.
 
