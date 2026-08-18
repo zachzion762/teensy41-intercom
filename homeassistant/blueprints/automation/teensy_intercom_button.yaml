@@ -1,0 +1,56 @@
+blueprint:
+  name: Teensy Intercom button
+  description: >-
+    Run an action when a button on a Teensy Intercom panel is pressed.
+
+    The panel's buttons arrive in Home Assistant automatically over MQTT
+    discovery, so pick the button you want and attach whatever should happen.
+    Add one automation per button you want to use.
+  domain: automation
+  input:
+    button:
+      name: Button
+      description: The intercom button to react to.
+      selector:
+        entity:
+          filter:
+            domain: binary_sensor
+            integration: mqtt
+    press_type:
+      name: Trigger on
+      description: >-
+        Press fires as soon as the button goes down. Release fires when it is
+        let go, which is usually what you want for a momentary action.
+      default: press
+      selector:
+        select:
+          options:
+            - label: Press
+              value: press
+            - label: Release
+              value: release
+    action:
+      name: Action
+      description: What to do when the button fires.
+      selector:
+        action: {}
+
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: !input button
+    from: "off"
+    to: "on"
+    id: press
+  - trigger: state
+    entity_id: !input button
+    from: "on"
+    to: "off"
+    id: release
+
+conditions:
+  - condition: trigger
+    id: !input press_type
+
+actions: !input action

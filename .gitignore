@@ -1,5 +1,4 @@
-
-# Local secrets
+# Local secrets (optional legacy file -- no longer needed, see docs/configuration.md)
 firmware/TeensyIntercom/secrets.h
 
 # Scratch
@@ -11,24 +10,16 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Build artifacts
-*.bin
-*.elf
-*.hex
-*.map
-*.dSYM/
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
 
-# Local secrets
-firmware/TeensyIntercom/secrets.h
+# Host test build output
+test/host/build/
 
-# Scratch
-project-structure.txt
-
-# OS/editor
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# Release staging
+dist/
 
 # Build artifacts
 *.bin

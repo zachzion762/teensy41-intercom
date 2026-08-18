@@ -1,4 +1,16 @@
-﻿#pragma once
+#pragma once
+//
+// LEGACY -- this file is no longer needed.
+//
+// Firmware 2.x stores the broker address, credentials, and network settings in
+// EEPROM. Configure a board over USB serial ('wizard') or its built-in web
+// page instead. See docs/quickstart.md.
+//
+// It is kept only for upgrades: if you build from source and a secrets.h is
+// still present next to the sketch, these values seed the defaults on first
+// boot, so an existing board keeps its Home Assistant entities. Once the
+// config has been saved to EEPROM, the file can be deleted.
+//
 #include <IPAddress.h>
 
 // Broker address (pick one)
@@ -10,7 +22,8 @@
 #define MQTT_USER "CHANGE_ME"
 #define MQTT_PASS "CHANGE_ME"
 
-// Unique suffix for HA unique_id/device id (anything unique, not secret)
+// Unique suffix for the HA unique_id / device id (anything unique, not secret).
+// Keep your existing value here to preserve entities across the 1.x -> 2.x upgrade.
 #define DEVICE_UNIQ_SUFFIX "ABC123"
 
 // Network (DHCP by default). For static, uncomment and set:
