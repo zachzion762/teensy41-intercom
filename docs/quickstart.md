@@ -71,10 +71,29 @@ Use this if you changed the pin map, the button count, or the firmware itself.
 pip install platformio
 pio run                # build
 pio run -t upload      # build and flash a connected Teensy
-pio device monitor     # open the config console
+pio device monitor     # open the config console (115200, set in platformio.ini)
 ```
 
 Library versions are pinned in `platformio.ini`, so nothing to install by hand.
+
+> **On Linux, install the Teensy udev rules first.** Without them the uploader
+> reports *"No Teensy boards were found on any USB ports"* even with the board
+> plugged in and in program mode, because it cannot open the USB device:
+>
+> ```bash
+> cd /tmp
+> wget https://www.pjrc.com/teensy/00-teensy.rules
+> sudo cp 00-teensy.rules /etc/udev/rules.d/
+> sudo udevadm control --reload-rules && sudo udevadm trigger
+> ```
+>
+> Then **unplug and replug** the board — udev rules only apply on attach.
+> Confirm it is visible with `lsusb -d 16c0:` (16c0 is PJRC's vendor ID) and
+> `ls /dev/ttyACM*`.
+>
+> If `pio device monitor` opens something like `/dev/ttyS4` instead, no Teensy
+> serial port exists yet and PlatformIO fell back to a motherboard serial port
+> — fix the udev rules rather than the monitor settings.
 
 ### With the Arduino IDE (2.3.6 or newer)
 
