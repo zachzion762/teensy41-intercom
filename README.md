@@ -1,29 +1,55 @@
-﻿# Teensy 4.1 Intercom – MQTT Button Panel
+# Teensy 4.1 Intercom — MQTT Button Panel
+
+Turns a Teensy 4.1 + Ethernet kit into a **12-button MQTT panel** with Home
+Assistant auto-discovery. Each button shows up as a binary sensor, with an
+availability topic so the panel goes unavailable when it is unplugged.
+
+**No toolchain required.** Flash the prebuilt firmware, set your broker over
+USB serial or the board's built-in web page, and the entities appear in Home
+Assistant on their own.
 
 ## Demo Video
 [![Watch the demo](https://img.youtube.com/vi/SxNvHAskOwU/0.jpg)](https://www.youtube.com/watch?v=SxNvHAskOwU)
 
-
-Turns a Teensy 4.1 + Ethernet kit into a **12-button MQTT panel** with Home Assistant discovery.  
-Each button is exposed as a binary sensor in Home Assistant, with \ON\/\OFF\ state, plus an availability topic.
-
 ---
 
 ## ✨ Features
-- 12 inputs (using \INPUT_PULLUP\, press = LOW)
-- Native Ethernet with **QNEthernet**
-- MQTT via **PubSubClient**
-- Home Assistant auto-discovery
-- Availability + periodic re-announce
+- 12 inputs (`INPUT_PULLUP`, press = LOW)
+- Native Ethernet with **QNEthernet**, MQTT via **PubSubClient**
+- Home Assistant auto-discovery — nothing to add to `configuration.yaml`
+- **Runtime configuration** in EEPROM: no editing source, no recompiling
+- Setup over a **USB serial wizard** or a **built-in web page**
+- DHCP or static IP, optional MQTT authentication
+- Availability topic + last will, and periodic discovery re-announce
+- Fully non-blocking main loop
 - 3D printed bracket for mounting
+
+---
+
+## 🚀 Get it running
+
+```
+1. Download teensy-intercom.hex from the latest release
+2. Flash it with Teensy Loader (no Arduino IDE needed)
+3. Serial monitor at 115200 baud → type: wizard
+4. Entities appear in Home Assistant
+```
+
+Full walkthrough, including building from source: **[docs/quickstart.md](docs/quickstart.md)**
+
+| Doc | What's in it |
+|-----|--------------|
+| [Quick start](docs/quickstart.md) | Flashing, first-time setup, LED codes, upgrading from 1.x |
+| [Configuration](docs/configuration.md) | Every setting, serial commands, web page, changing the pin map |
+| [Home Assistant](docs/home-assistant.md) | Discovery, the automation blueprint, manual automations |
+| [MQTT topics](docs/mqtt-topics.md) | Topic layout and discovery payloads |
 
 ---
 
 ## 🖼️ System Overview
 ![System Overview](hardware/system_overview_diagram.jpg)
 
-This diagram shows how the Teensy fits into the network:  
-buttons → Teensy 4.1 → Ethernet → MQTT broker → Home Assistant.
+Buttons → Teensy 4.1 → Ethernet → MQTT broker → Home Assistant.
 
 ---
 
@@ -32,12 +58,16 @@ buttons → Teensy 4.1 → Ethernet → MQTT broker → Home Assistant.
 
 Each button is wired from a Teensy pin to **GND**. Pins used are:
 
-\\\
+```
 BTN1..BTN12 → 1, 3, 5, 7, 9, 10, 12, 24, 26, 28, 30, 32
-\\\
+```
 
-All pins use \INPUT_PULLUP\, so pressing pulls the pin LOW.  
+All pins use `INPUT_PULLUP`, so pressing pulls the pin LOW.
 **Other side of every button = GND (shared).**
+
+To use different pins or a different number of buttons, edit `kButtonPins` in
+[`firmware/TeensyIntercom/src/BoardConfig.h`](firmware/TeensyIntercom/src/BoardConfig.h)
+— everything else follows automatically.
 
 ---
 
@@ -47,8 +77,7 @@ All pins use \INPUT_PULLUP\, so pressing pulls the pin LOW.
 |-------------------|-----------------|--------|-------------|
 | ![Brackets](hardware/photos/3d_print_brackets1.jpg) | ![Empty1](hardware/photos/empty1.jpg) | ![Wiring1](hardware/photos/wiring1.jpg) | ![WoodBlock](hardware/photos/3d_print_brackets5.jpg) |
 
-> More photos in [hardware/photos](hardware/photos).  
-> If your exact filenames differ, update the links above (they were sanitized to remove spaces/parentheses).
+> More photos in [hardware/photos](hardware/photos).
 
 ---
 
@@ -58,54 +87,72 @@ All pins use \INPUT_PULLUP\, so pressing pulls the pin LOW.
 ---
 
 ## 🛠️ 3D Printed Parts
-- [\Teensy_4.1_Ethernet_Mount.stl\](hardware/Teensy_4.1_Ethernet_Mount.stl)  
+- [`Teensy_4.1_Ethernet_Mount.stl`](hardware/Teensy_4.1_Ethernet_Mount.stl)
   Bracket to hold the Teensy with the PJRC Ethernet kit.
 
 ---
 
-## 📡 MQTT
-See [docs/mqtt-topics.md](docs/mqtt-topics.md).
+## 🏠 Home Assistant
 
----
+Entities appear automatically under **Settings → Devices & Services → MQTT**.
 
-## 🏠 Home Assistant Integration
-
-Entities appear automatically under **MQTT → Binary Sensors** (discovery).  
-
-![HA Discovery](docs/screenshots/ha_discovery.png)  
+![HA Discovery](docs/screenshots/ha_discovery.png)
 ![HA Entities](docs/screenshots/ha_entities.png)
 
+An automation blueprint is included — see [docs/home-assistant.md](docs/home-assistant.md).
+
 ---
 
-## ⚙️ Build Instructions (Arduino IDE 2.3.6)
+## 🧑‍💻 Development
 
-1. **Boards Manager**: install “Teensy by PJRC” → select **Teensy 4.1**  
-2. **Library Manager**: install  
-   - **QNEthernet** (Shawn Silverman)  
-   - **PubSubClient** (Nick O’Leary)  
-3. Copy \firmware/TeensyIntercom/secrets_example.h\ → \secrets.h\ and edit with your broker details.  
-   (\secrets.h\ is ignored by Git — safe to commit the project without it.)  
-4. Open \firmware/TeensyIntercom/TeensyIntercom.ino\  
-5. **Verify** → **Upload**
+```bash
+pio run              # build the firmware
+pio run -t upload    # flash a connected Teensy
+pio device monitor   # open the configuration console
+make -C test/host    # run the host tests (no hardware needed)
+```
 
-After upload, check MQTT:
-\\\
-intercom/availability = online
-intercom/button/N = ON/OFF
-\\\
+The hardware-independent logic — config parsing, EEPROM persistence, button
+debouncing — is covered by tests that run on any machine. CI runs those plus a
+full firmware build on every push, and attaches a prebuilt `.hex` to tagged
+releases.
+
+Layout:
+
+```
+firmware/TeensyIntercom/
+  TeensyIntercom.ino     thin sketch, nothing to edit
+  src/                   the actual firmware
+    IntercomApp.*        wiring: network, MQTT, buttons, config front-ends
+    IntercomConfig.*     EEPROM-backed settings + parsing
+    HaPublisher.*        Home Assistant discovery and state publishing
+    ButtonPanel.*        debounced scanning
+    SerialConsole.*      USB serial console and setup wizard
+    WebConfig.*          built-in configuration web page
+    StatusLed.*          non-blocking status blinks
+    BoardConfig.h        pin map and timings
+test/host/               host tests + Arduino stubs
+homeassistant/           automation blueprint
+```
+
+---
+
+## 📦 Bill of Materials
+See [hardware/BOM.md](hardware/BOM.md) for the full parts list.
 
 ---
 
 ## 📜 License
 MIT — see [LICENSE](LICENSE).
 
+Note that **QNEthernet is licensed AGPL-3.0-or-later**. The source in this
+repository is MIT, but a compiled binary that links QNEthernet — including the
+prebuilt `.hex` attached to releases — carries AGPL obligations. Since the
+complete corresponding source is public here, that is satisfied for normal
+hobby use; if you plan to distribute modified binaries, read the AGPL terms.
+
 ---
 
 ## 🙏 Credits
-- **QNEthernet** by Shawn Silverman  
-- **PubSubClient** by Nick O’Leary  
-- Built with Arduino IDE 2.3.6
-
-## Bill of Materials
-See [hardware/BOM.md](hardware/BOM.md) for the full parts list.
-
+- **QNEthernet** by Shawn Silverman
+- **PubSubClient** by Nick O'Leary
