@@ -27,6 +27,8 @@ next attempt; network settings (DHCP, static IP, MAC) need the reboot.
 | `dns` | `0.0.0.0` | DNS server — needed if `host` is a hostname |
 | `mac` | *(auto)* | Override the MAC, e.g. `02:12:34:56:78:9a`. Empty restores the built-in one |
 | `web` | `on` | Turn the configuration web page off entirely |
+| `web_user` | `admin` | Username for the web page |
+| `web_pass` | *(empty)* | Password for the web page. **Empty leaves the page open to your LAN** |
 
 Booleans accept `on`/`off`, `true`/`false`, `yes`/`no`, `1`/`0`.
 
@@ -75,12 +77,29 @@ stored password* to remove it.
 
 ### Security
 
-The page is **plain HTTP with no authentication**, intended for a trusted home
-LAN — the same trust level as an unauthenticated MQTT broker on the same
-network. Anyone who can reach the board's IP can read the broker address and
-username (the password is never sent back to the browser) and change settings.
+**Set a web password.** Until you do, the page is open: anyone who can reach
+the board's IP can read your broker address and username (stored passwords are
+never sent back to the browser) and change any setting. The page shows a
+warning banner while it is unprotected.
 
-If that is not acceptable on your network, turn it off:
+```
+set web_user zach
+set web_pass a-long-passphrase
+save
+reboot
+```
+
+Every route, including reboot, is then behind HTTP basic auth.
+
+Two limits worth understanding:
+
+- **It is plain HTTP.** Basic auth base64-encodes the credentials, it does not
+  encrypt them. Anyone able to capture traffic on your LAN can read them. This
+  is LAN-grade protection, not internet-grade.
+- **Do not port-forward this device.** It is not built to face the internet.
+  Reach it over a VPN if you need access from outside.
+
+If you would rather not run the page at all:
 
 ```
 set web off
@@ -88,8 +107,9 @@ save
 reboot
 ```
 
-Serial then becomes the only configuration path, which is exactly what
-`factory-reset` is for if you get locked out.
+Serial then becomes the only configuration path. If you lock yourself out —
+forgotten password, page disabled — `factory-reset` over serial clears
+everything back to defaults.
 
 ---
 

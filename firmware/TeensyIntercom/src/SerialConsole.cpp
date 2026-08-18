@@ -26,6 +26,7 @@ const WizardStep kWizard[] = {
   {"dns",         "DNS server",                                 true},
   {"device_name", "Device name shown in Home Assistant",        false},
   {"base_topic",  "MQTT base topic",                            false},
+  {"web_pass",    "Web config password (blank = page has no password)", false},
 };
 const uint8_t kWizardSteps = sizeof(kWizard) / sizeof(kWizard[0]);
 
@@ -151,7 +152,8 @@ void SerialConsole::handleWizardAnswer(const char* answer) {
       promptWizardStep();  // ask the same question again
       return;
     }
-  } else if (!strcasecmp(step.key, "user") || !strcasecmp(step.key, "pass")) {
+  } else if (!strcasecmp(step.key, "user") || !strcasecmp(step.key, "pass") ||
+             !strcasecmp(step.key, "web_pass")) {
     // Empty input is a meaningful answer for the optional credentials.
     config::setField(*cfg_, step.key, "", nullptr, 0);
   }
@@ -171,7 +173,8 @@ void SerialConsole::printHelp() {
   Serial.println(F("  reboot              restart the board"));
   Serial.println();
   Serial.println(F("Keys: host port user pass device_id device_name base_topic"));
-  Serial.println(F("      discovery_prefix dhcp ip mask gw dns mac web"));
+  Serial.println(F("      discovery_prefix dhcp ip mask gw dns mac"));
+  Serial.println(F("      web web_user web_pass"));
 }
 
 void SerialConsole::handleCommand(char* line) {

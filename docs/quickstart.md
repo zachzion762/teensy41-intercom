@@ -34,13 +34,16 @@ PuTTY, `pio device monitor`) and type:
 wizard
 ```
 
-Answer the prompts — broker address, port, username, password, DHCP or static.
-Press Enter to keep a shown value. The wizard saves automatically at the end.
-Then:
+Answer the prompts — broker address, port, username, password, DHCP or static,
+and a password for the board's own web page. Press Enter to keep a shown value.
+The wizard saves automatically at the end. Then:
 
 ```
 reboot
 ```
+
+> **Set the web password when asked.** Leaving it blank means anyone on your
+> network can reach the board's configuration page and change its settings.
 
 **Over the web page** (once the board has an IP from DHCP):
 

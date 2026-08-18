@@ -9,6 +9,10 @@
 
 #define INTERCOM_FW_VERSION "2.0.0"
 
+// Where users can obtain the complete corresponding source. Surfaced on the
+// web page to satisfy AGPL-3.0 section 13 (QNEthernet is AGPL-licensed).
+#define INTERCOM_SOURCE_URL "https://github.com/zachzion762/teensy41-intercom"
+
 // Button pins. Each button connects its pin to GND; pins use INPUT_PULLUP,
 // so a press reads LOW. Change this list (and kButtonCount follows) if you
 // build a panel with a different number of buttons.

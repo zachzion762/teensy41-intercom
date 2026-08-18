@@ -142,14 +142,42 @@ See [hardware/BOM.md](hardware/BOM.md) for the full parts list.
 
 ---
 
-## 📜 License
-MIT — see [LICENSE](LICENSE).
+## 📜 License and disclaimer
 
-Note that **QNEthernet is licensed AGPL-3.0-or-later**. The source in this
-repository is MIT, but a compiled binary that links QNEthernet — including the
-prebuilt `.hex` attached to releases — carries AGPL obligations. Since the
-complete corresponding source is public here, that is satisfied for normal
-hobby use; if you plan to distribute modified binaries, read the AGPL terms.
+The code in this repository is **MIT** — see [LICENSE](LICENSE).
+
+**No warranty.** This is a hobby project provided "as is", without warranty of
+any kind, express or implied, and without liability for any claim or damages
+(see the LICENSE text for the binding wording). Nothing here is safety-rated:
+do not use it for fire alarms, medical alerts, security systems, door
+interlocks, or anything else where a missed button press could hurt someone or
+cause loss. It is a doorbell-grade convenience device on a home network.
+
+**You are responsible for your own build.** Wiring, mains-adjacent enclosure
+work, network exposure, and anything you automate off these buttons are yours
+to verify.
+
+### Third-party licenses
+
+| Component | License |
+|-----------|---------|
+| This repository's own code | MIT |
+| [QNEthernet](https://github.com/ssilverman/QNEthernet) | **AGPL-3.0-or-later** |
+| [PubSubClient](https://github.com/knolleary/pubsubclient) | MIT |
+
+QNEthernet is copyleft. A **compiled binary** that links it — including any
+`.hex` attached to a release here — is a combined work governed by the AGPL,
+even though this repository's own source is MIT. That obligation is met by
+publishing the complete corresponding source in this repository, and the
+device's web page links back to it as AGPL-3.0 section 13 requires for a
+network-facing interface.
+
+Practically, for building your own panel from this repo: nothing is asked of
+you. If you **redistribute modified binaries**, you must publish your modified
+source under the AGPL. If you need a non-copyleft binary, QNEthernet's author
+[invites licensing enquiries](https://github.com/ssilverman/QNEthernet#license).
+
+*This is a plain-language summary by the authors, not legal advice.*
 
 ---
 

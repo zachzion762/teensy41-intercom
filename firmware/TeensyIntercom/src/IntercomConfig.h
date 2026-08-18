@@ -11,7 +11,7 @@
 #include <IPAddress.h>
 
 static const uint32_t kConfigMagic   = 0x54494331UL;  // "TIC1"
-static const uint16_t kConfigVersion = 1;
+static const uint16_t kConfigVersion = 2;
 
 struct IntercomConfig {
   uint32_t magic;
@@ -41,6 +41,8 @@ struct IntercomConfig {
 
   // Services
   uint8_t  webEnabled;
+  char     webUser[33];  // HTTP basic-auth user for the config page
+  char     webPass[33];  // blank leaves the config page unauthenticated
 
   uint32_t crc;
 };

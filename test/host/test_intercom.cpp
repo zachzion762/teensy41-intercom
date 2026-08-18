@@ -128,6 +128,40 @@ void testGetField() {
   checkStr(buf, "", "unknown key yields an empty string");
 }
 
+void testWebAuth() {
+  printf("web config credentials\n");
+  IntercomConfig cfg;
+  config::setDefaults(cfg);
+  char err[64], buf[72];
+
+  checkStr(cfg.webUser, "admin", "default web user");
+  check(cfg.webPass[0] == '\0', "no web password by default");
+
+  check(config::setField(cfg, "web_pass", "letmein", err, sizeof(err)), "set web password");
+  checkStr(cfg.webPass, "letmein", "web password stored");
+
+  config::getField(cfg, "web_pass", buf, sizeof(buf), false);
+  checkStr(buf, "", "web password hidden without showSecrets");
+  config::getField(cfg, "web_pass", buf, sizeof(buf), true);
+  checkStr(buf, "letmein", "web password readable with showSecrets");
+
+  check(config::setField(cfg, "web_pass", "", err, sizeof(err)), "web password can be cleared");
+  check(cfg.webPass[0] == '\0', "web password cleared");
+
+  check(!config::setField(cfg, "web_user", "", err, sizeof(err)), "empty web user rejected");
+  checkStr(cfg.webUser, "admin", "rejected web user left the old value alone");
+
+  // The credentials must survive a save/load like everything else.
+  EEPROM.wipe(0xFF);
+  config::setField(cfg, "web_user", "zach", err, sizeof(err));
+  config::setField(cfg, "web_pass", "s3cret", err, sizeof(err));
+  config::save(cfg);
+  IntercomConfig back;
+  check(config::load(back), "config with web credentials loads back");
+  checkStr(back.webUser, "zach", "web user survives a round-trip");
+  checkStr(back.webPass, "s3cret", "web password survives a round-trip");
+}
+
 void testPersistence() {
   printf("EEPROM persistence\n");
   EEPROM.wipe(0xFF);
@@ -283,6 +317,7 @@ int main() {
   testSetField();
   testGetField();
   testPersistence();
+  testWebAuth();
   testDeviceId();
   testButtonDebounce();
   testStatusLed();

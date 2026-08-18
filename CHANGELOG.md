@@ -21,7 +21,15 @@ on any network.
 - **Home Assistant automation blueprint** for wiring a button to an action.
 - Device ID derived automatically from the board's MAC address, so two panels
   on one broker no longer collide.
-- Docs: quick start, configuration reference, Home Assistant guide.
+- **HTTP basic auth on the configuration web page** (`web_user` / `web_pass`).
+  Every route including reboot is gated; credentials are compared in constant
+  time. The page shows a warning banner while no password is set, and the
+  serial wizard now prompts for one.
+- Source-code link on the web page, satisfying AGPL-3.0 section 13 for the
+  device's network-facing interface.
+- Docs: quick start, configuration reference, Home Assistant guide, plus an
+  explicit third-party license breakdown and no-warranty / not-safety-rated
+  disclaimer in the README.
 
 ### Fixed
 - **Discovery payloads were silently dropped.** Home Assistant discovery

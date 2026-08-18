@@ -4,8 +4,11 @@
 //
 // Requests are accumulated across successive update() calls rather than
 // read in a blocking loop, so serving the page never delays a button press.
-// This is a plain-HTTP, unauthenticated page intended for a trusted LAN --
-// it can be turned off entirely with the 'web' setting.
+//
+// Access is guarded by HTTP basic auth whenever a 'web_pass' is set. It is
+// still plain HTTP -- credentials travel base64-encoded, not encrypted -- so
+// this is LAN-grade protection, not internet-grade. The page can be turned
+// off entirely with the 'web' setting.
 //
 
 #include <Arduino.h>
@@ -24,6 +27,8 @@ class WebConfig {
   void reset();
   bool requestComplete() const;
   void route();
+  bool authorized() const;
+  void sendAuthChallenge();
   void sendFormPage(const char* notice);
   void sendStatus(int code, const char* reason, const char* body);
   void applyForm(const String& body, char* notice, size_t noticeLen);

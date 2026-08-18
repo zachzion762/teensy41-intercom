@@ -104,6 +104,7 @@ void setDefaults(IntercomConfig& cfg) {
   cfg.mqttPort = 1883;
   cfg.useDhcp  = 1;
   cfg.webEnabled = 1;
+  copyStr(cfg.webUser, sizeof(cfg.webUser), "admin");
   copyStr(cfg.deviceName, sizeof(cfg.deviceName), "Teensy Intercom");
   copyStr(cfg.baseTopic, sizeof(cfg.baseTopic), "intercom");
   copyStr(cfg.discoveryPrefix, sizeof(cfg.discoveryPrefix), "homeassistant");
@@ -167,6 +168,8 @@ bool load(IntercomConfig& cfg) {
   stored.deviceName[sizeof(stored.deviceName) - 1]           = '\0';
   stored.baseTopic[sizeof(stored.baseTopic) - 1]             = '\0';
   stored.discoveryPrefix[sizeof(stored.discoveryPrefix) - 1] = '\0';
+  stored.webUser[sizeof(stored.webUser) - 1]                 = '\0';
+  stored.webPass[sizeof(stored.webPass) - 1]                 = '\0';
 
   cfg = stored;
   return true;
@@ -264,6 +267,18 @@ bool setField(IntercomConfig& cfg, const char* key, const char* value,
     }
     return true;
   }
+  if (!strcasecmp(key, "web_user")) {
+    if (value[0] == '\0') {
+      fail(err, errLen, "web_user cannot be empty");
+      return false;
+    }
+    copyStr(cfg.webUser, sizeof(cfg.webUser), value);
+    return true;
+  }
+  if (!strcasecmp(key, "web_pass")) {
+    copyStr(cfg.webPass, sizeof(cfg.webPass), value);
+    return true;
+  }
   if (!strcasecmp(key, "web")) {
     if (!parseBool(value, cfg.webEnabled)) {
       fail(err, errLen, "web must be on/off");
@@ -317,6 +332,8 @@ void getField(const IntercomConfig& cfg, const char* key, char* out,
   else if (!strcasecmp(key, "discovery_prefix")) copyStr(out, outLen, cfg.discoveryPrefix);
   else if (!strcasecmp(key, "dhcp"))             copyStr(out, outLen, cfg.useDhcp ? "on" : "off");
   else if (!strcasecmp(key, "web"))              copyStr(out, outLen, cfg.webEnabled ? "on" : "off");
+  else if (!strcasecmp(key, "web_user"))         copyStr(out, outLen, cfg.webUser);
+  else if (!strcasecmp(key, "web_pass"))         copyStr(out, outLen, showSecrets ? cfg.webPass : "");
   else if (!strcasecmp(key, "ip"))               formatIP(cfg.ip, out, outLen);
   else if (!strcasecmp(key, "mask"))             formatIP(cfg.mask, out, outLen);
   else if (!strcasecmp(key, "gw"))               formatIP(cfg.gw, out, outLen);
@@ -354,6 +371,13 @@ void print(Print& out, const IntercomConfig& cfg, bool showSecrets) {
   getField(cfg, "mac", buf, sizeof(buf), true);
   out.print(F("  mac              = ")); out.println(buf[0] ? buf : "(auto)");
   out.print(F("  web              = ")); out.println(cfg.webEnabled ? F("on") : F("off"));
+  if (cfg.webEnabled) {
+    out.print(F("  web_user         = ")); out.println(cfg.webUser);
+    out.print(F("  web_pass         = "));
+    if (showSecrets)          out.println(cfg.webPass);
+    else if (cfg.webPass[0])  out.println(F("(set, hidden)"));
+    else                      out.println(F("(EMPTY -- config page is open to your LAN)"));
+  }
 }
 
 }  // namespace config
